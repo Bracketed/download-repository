@@ -122,11 +122,11 @@ function getUrl(repo: normal, clone: string) {
 		url = origin + repo.owner + '/' + repo.name + '.git';
 	} else {
 		if (repo.type === 'github') {
-			url = origin + repo.owner + '/' + repo.name + '/archive/' + repo.checkout + '.zip';
+			url = `https://codeload.github.com/${repo.owner}/${repo.name}/zip/refs/heads/${repo.checkout}`;
 		} else if (repo.type === 'gitlab') {
-			url = origin + repo.owner + '/' + repo.name + '/repository/archive.zip?ref=' + repo.checkout;
+			url = `https://gitlab.com/${repo.owner}/${repo.name}/-/archive/${repo.checkout}/${repo.name}-${repo.checkout}.zip`;
 		} else if (repo.type === 'bitbucket') {
-			url = origin + repo.owner + '/' + repo.name + '/get/' + repo.checkout + '.zip';
+			url = `${origin + repo.owner}/${repo.name}/get/${repo.checkout}.zip`;
 		}
 	}
 

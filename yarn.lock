@@ -5,9 +5,9 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@bracketed/download-repository@workspace:.":
+"@bracketed/gitdownlad@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@bracketed/download-repository@workspace:."
+  resolution: "@bracketed/gitdownlad@workspace:."
   dependencies:
     "@bracketed/typescript-config": "npm:^4.4.0"
     "@types/download": "npm:^8.0.5"

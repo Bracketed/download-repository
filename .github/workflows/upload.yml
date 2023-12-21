@@ -5,23 +5,15 @@ on:
         push:
 
 jobs:
-        upload:
+        publish:
                 runs-on: ubuntu-latest
                 steps:
                         - uses: actions/checkout@v4
-                        - name: Yarn Package Publish
-                          uses: luvies/action-yarn-publish@v0.1.1
-                          env:
-                             NODE_AUTH_TOKEN: ${{ secrets.PAT }}
                         - uses: actions/setup-node@v3
                           with:
                                   node-version: '21.x'
-                                  registry-url: 'https://registry.yarnpkg.com'
-                                  scope: ${{ github.repository_owner }}
-                        - run: corepack enable
-                        - run: yarn set version stable
-                        - run: yarn install --immutable
-                        - name: Publish to GitHub Package Registry
-                          run: yarn npm publish
-                          env:
-                                  NODE_AUTH_TOKEN: ${{ secrets.PAT }}
+                        - run: npm ci
+                        - uses: JS-DevTools/npm-publish@v3
+                          with:
+                                  token: ${{ secrets.PAT }}
+                                  registry: 'https://registry.yarnpkg.com'

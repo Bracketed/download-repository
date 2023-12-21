@@ -33,7 +33,6 @@
 		"git-clone": "^0.2.0",
 		"rimraf": "^5.0.5"
 	},
-	"packageManager": "yarn@4.0.2",
 	"devDependencies": {
 		"@bracketed/typescript-config": "^4.4.0",
 		"@types/download": "^8.0.5",

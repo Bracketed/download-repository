@@ -15,8 +15,8 @@ jobs:
                                   node-version: '21.x'
                                   registry-url: 'https://registry.yarnpkg.com'
                                   scope: ${{ github.repository_owner }}
-                        - run: npm ci
+                        - run: yarn install --immutable
                         - name: Publish to GitHub Package Registry
-                          run: npm publish
+                          run: yarn npm publish
                           env:
                                   NODE_AUTH_TOKEN: ${{ secrets.PAT }}

@@ -11,7 +11,7 @@ interface normal {
 	name?: string | undefined;
 }
 
-async function download(repo: string, dest: string, opts: any) {
+async function download(repo: string, dest: string, opts?: any) {
 	opts = opts || {};
 	const clone = opts.clone || false;
 	delete opts.clone;

@@ -13,7 +13,7 @@ jobs:
                           with:
                                   node-version: '21.x'
                         - run: yarn install #--immutable
-                        - uses: JS-DevTools/npm-publish@v3
+                        - uses: JS-DevTools/npm-publish@v3.0.1
                           with:
                                   token: ${{ secrets.PAT }}
                                   registry: 'https://registry.yarnpkg.com'

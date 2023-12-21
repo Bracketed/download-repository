@@ -12,7 +12,7 @@
 	"sideEffects": false,
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/ninjaninja140/download-repository",
+		"url": "git+https://github.com/ninjaninja140/download-repository.git",
 		"directory": "."
 	},
 	"bugs": {
@@ -38,5 +38,6 @@
 		"@types/download": "^8.0.5",
 		"@types/git-clone": "^0.2.3",
 		"typescript": "^5.3.3"
-	}
+	},
+	"packageManager": "yarn@4.0.2"
 }

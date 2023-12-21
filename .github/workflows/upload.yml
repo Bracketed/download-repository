@@ -1,0 +1,22 @@
+name: Upload changed to the npm and yarn registries
+run-name: Upload changed to the npm and yarn registries
+
+on:
+        push:
+
+jobs:
+        upload:
+                runs-on: ubuntu-latest
+                steps:
+                        - uses: actions/checkout@v4
+
+                        - uses: actions/setup-node@v3
+                          with:
+                                  node-version: '21.x'
+                                  registry-url: 'https://registry.yarnpkg.com'
+                                  scope: ${{ github.repository_owner }}
+                        - run: npm ci
+                        - name: Publish to GitHub Package Registry
+                          run: npm publish
+                          env:
+                                  NODE_AUTH_TOKEN: ${{ secrets.PAT }}

@@ -13,6 +13,11 @@ jobs:
                           with:
                                   node-version: '21.x'
                         - run: yarn install --immutable
+                        - run: yarn tsc
                         - uses: JS-DevTools/npm-publish@v3.0.1
                           with:
                                   token: ${{ secrets.PAT }}
+                        - uses: JS-DevTools/npm-publish@v3.0.1
+                          with:
+                                  token: ${{ secrets.TOKEN }}
+                                  registry: 'https://npm.pkg.github.com'

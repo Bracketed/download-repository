@@ -1,6 +1,4 @@
 import downloader from 'download';
-import gitClone from 'git-clone';
-import { sync } from 'rimraf';
 
 interface normal {
 	type: string;
@@ -11,78 +9,47 @@ interface normal {
 	name?: string | undefined;
 }
 
-async function download(repo: string, dest: string, opts?: any) {
-	opts = opts || {};
-	const clone = opts.clone || false;
-	delete opts.clone;
-
+export default async function download(repo: string, dest: string) {
 	const normalizedRepository = normalize(repo);
-	const url = normalizedRepository.url || getUrl(normalizedRepository, clone);
+	const url = normalizedRepository.url || getUrl(normalizedRepository);
 
-	if (clone) {
-		var cloneOptions = {
-			checkout: normalizedRepository.checkout,
-			shallow: normalizedRepository.checkout === 'master',
-			...opts,
-		};
-		return gitClone(url!, dest, cloneOptions, function (err) {
-			if (err === undefined) {
-				sync(dest + '/.git');
-				return;
-			} else {
-				return err;
-			}
-		});
-	} else {
-		var downloadOptions = {
-			extract: true,
-			strip: 1,
-			mode: '666',
-			...opts,
-			headers: {
-				accept: 'application/zip',
-				...(opts.headers || {}),
-			},
-		};
-		return await downloader(url!, dest, downloadOptions)
-			.then(function (data) {
-				return data;
-			})
-			.catch(function (err) {
-				return err;
-			});
-	}
+	if (!url) return false;
+
+	return await downloader(url, dest, {
+		extract: true,
+		strip: 1,
+		headers: {
+			accept: 'application/zip',
+		},
+	})
+		.then(() => true)
+		.catch(() => false);
 }
 
 function normalize(repo: string): normal {
-	var regex = /^(?:(direct):([^#]+)(?:#(.+))?)$/;
-	var match = regex.exec(repo);
+	const regex = /^(?:(direct):([^#]+)(?:#(.+))?)$/;
+	const match: RegExpExecArray | null = regex.exec(repo);
 
-	if (match) {
-		var url = match[2];
-		var directCheckout = match[3] || 'master';
+	if (!match) {
+		const regex: RegExp = /^(?:(github|gitlab|bitbucket):)?(?:(.+):)?([^/]+)\/([^#]+)(?:#(.+))?$/;
+		const match: RegExpExecArray | null = regex.exec(repo);
+		const type: string = match![1] || 'github';
+		let origin: string | null = match![2] || null;
+		const owner: string = match![3];
+		const name: string = match![4];
+		const checkout: string = match![5] || 'main';
 
-		return {
-			type: 'direct',
-			url: url,
-			checkout: directCheckout,
-		};
-	} else {
-		const regex = /^(?:(github|gitlab|bitbucket):)?(?:(.+):)?([^/]+)\/([^#]+)(?:#(.+))?$/;
-		const match = regex.exec(repo);
-		const type = match![1] || 'github';
-		let origin = match![2] || null;
-		const owner = match![3];
-		const name = match![4];
-		const checkout = match![5] || 'main';
-
-		if (origin == null) {
-			if (type === 'github') {
-				origin = 'github.com';
-			} else if (type === 'gitlab') {
-				origin = 'gitlab.com';
-			} else if (type === 'bitbucket') {
-				origin = 'bitbucket.org';
+		if (!origin) {
+			switch (type) {
+				case 'github':
+					origin = 'github.com';
+					break;
+				case 'gitlab':
+					origin = 'gitlab.com';
+					break;
+				case 'bitbucket':
+					origin = 'bitbucket.org';
+					break;
 			}
 		}
 
@@ -94,43 +61,28 @@ function normalize(repo: string): normal {
 			checkout,
 		};
 	}
+
+	return {
+		type: 'direct',
+		url: match[2],
+		checkout: match[3] || 'master',
+	};
 }
 
-function addProtocol(origin: string, clone: string): string {
-	if (!/^(f|ht)tps?:\/\//i.test(origin)) {
-		if (clone) {
-			origin = 'git@' + origin;
-		} else {
-			origin = 'https://' + origin;
-		}
-	}
+function getUrl(repo: normal) {
+	let url;
 
-	return origin;
-}
-
-function getUrl(repo: normal, clone: string) {
-	var url;
-	var origin = addProtocol(repo.origin!, clone);
-
-	if (/^git@/i.test(origin)) {
-		origin = origin + ':';
-	} else {
-		origin = origin + '/';
-	}
-
-	if (clone) {
-		url = origin + repo.owner + '/' + repo.name + '.git';
-	} else {
-		if (repo.type === 'github') {
+	switch (repo.type) {
+		case 'github':
 			url = `https://codeload.github.com/${repo.owner}/${repo.name}/zip/refs/heads/${repo.checkout}`;
-		} else if (repo.type === 'gitlab') {
+			break;
+		case 'gitlab':
 			url = `https://gitlab.com/${repo.owner}/${repo.name}/-/archive/${repo.checkout}/${repo.name}-${repo.checkout}.zip`;
-		} else if (repo.type === 'bitbucket') {
-			url = `${origin + repo.owner}/${repo.name}/get/${repo.checkout}.zip`;
-		}
+			break;
+		case 'bitbucket':
+			url = `https://bitbucket.org/${repo.owner}/${repo.name}/get/${repo.checkout}.zip`;
+			break;
 	}
 
 	return url;
 }
-
-export { download, addProtocol, normalize };

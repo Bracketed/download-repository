@@ -1,7 +1,7 @@
 {
 	"name": "@bracketed/gitdownloader",
 	"author": "@bracketed",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"type": "module",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -29,14 +29,11 @@
 	],
 	"description": "Download and extract a git repository using node!",
 	"dependencies": {
-		"download": "^8.0.0",
-		"git-clone": "^0.2.0",
-		"rimraf": "^5.0.5"
+		"download": "^8.0.0"
 	},
 	"devDependencies": {
 		"@bracketed/typescript-config": "^4.4.0",
 		"@types/download": "^8.0.5",
-		"@types/git-clone": "^0.2.3",
 		"typescript": "^5.3.3"
 	},
 	"packageManager": "yarn@4.0.2"

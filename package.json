@@ -20,7 +20,6 @@
 	},
 	"scripts": {
 		"compile": "yarn tsc",
-		"setversion": "node -p \"'export const LIB_VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/utilities/version.ts",
 		"lint": "yarn prettier --write src/**/*.ts",
 		"validate": "yarn prettier --check src/**/*.ts",
 		"lint:all": "yarn prettier --write .",

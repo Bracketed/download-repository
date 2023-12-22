@@ -1,4 +1,4 @@
-import downloader from 'download';
+import downloader from '@bracketed/downloader';
 
 interface normal {
 	type: string;
@@ -18,9 +18,6 @@ export default async function download(repo: string, dest: string) {
 	return await downloader(url, dest, {
 		extract: true,
 		strip: 1,
-		headers: {
-			accept: 'application/zip',
-		},
 	})
 		.then(() => true)
 		.catch(() => false);
